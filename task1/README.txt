@@ -1,5 +1,4 @@
-Below is the README content for the UTXO-Based Transaction Simulator converted into Markdown format. The content is based on the provided text, which describes the updated utxo_simulation.c program that uses automatically generated addresses (e.g., ADDR1) instead of user names for transactions, as per your latest request. The Markdown version maintains all sections, formatting, and details, ensuring it’s clear, well-structured, and suitable for inclusion in your GitHub repository or assignment submission. I’ve also ensured it aligns with your specified users (Joshua, Favour, King, Aaron) and your macOS environment (noted from alana@Alana-MacBook-Pro).
-This Markdown file assumes you’re using the updated utxo_simulation.c from the previous response, which includes address generation, the ability to view spent/unspent UTXOs, and an interactive CLI with colors and emojis (🎉). If you need the C code or users.txt content again, let me know, and I can include them.
+
 UTXO-Based Transaction Simulator
 Overview
 This C program simulates a simplified Unspent Transaction Output (UTXO) model, mimicking Bitcoin's transaction system. It reads user names from users.txt, automatically generates unique addresses for each user (e.g., ADDR1), and provides an interactive command-line interface (CLI) with colorful prompts and feedback. Users can:
@@ -180,33 +179,3 @@ Run:
 bash
 ./utxo_simulation
 Follow the menu prompts to interact.
-Notes
-User names in users.txt must be unique, < 20 characters, and without spaces.
-Addresses (e.g., ADDR1) are automatically generated for each user.
-The program requires users.txt to exist with valid names.
-Spent UTXOs are highlighted in red for clarity.
-ANSI color codes may not work in some terminals (e.g., Windows CMD without ANSI support).
-Maximum limits: 100 UTXOs, 50 users.
-Transaction IDs are sequential (TX1, TX2, etc.).
-How to Use This Markdown File
-Save as README.md:
-Copy the above content into a file named README.md in your project directory (same directory as utxo_simulation.c and users.txt).
-Markdown (.md) is the standard format for GitHub READMEs, ensuring proper rendering.
-GitHub Repository:
-Create a repository (e.g., UTXO_Simulator).
-Push utxo_simulation.c, users.txt, and README.md.
-The Markdown will display formatted text, headings, code blocks, and tables on GitHub.
-Submission:
-Include utxo_simulation.c, users.txt, and README.md in a folder.
-Compress into a .zip file named YourFullName_UTXO_Blockchain.zip (e.g., Alana_UTXO_Blockchain.zip).
-Upload to the assignment platform by June 5, 2025, 11:59 PM (noted from prior messages).
-Provide the GitHub repository URL in your submission.
-Notes
-Alignment with Your Request: The Markdown preserves all details from the provided text, formatted for readability and compatibility with GitHub. It reflects the use of addresses (e.g., ADDR1) and includes your specified users (Joshua, Favour, King, Aaron).
-UTXO Model: The README explains the program’s implementation of the UTXO model, reinforcing your learning goal of understanding blockchain models (as discussed in prior messages).
-Running on macOS: The setup instructions are tailored for your MacBook Pro (from alana@Alana-MacBook-Pro). If you need help compiling/running, let me know.
-Additional Help:
-If you need the updated utxo_simulation.c code again, I can provide it.
-For Task 2 (Account/Balance) or Question 2 (Blockchain Mining), I can create similar Markdown READMEs or code updates (e.g., using addresses in account_model_simulation.c).
-If you want more explanation of the UTXO model or other blockchain models (e.g., Account/Balance, EUTXO), I can expand on the comparison from earlier.
-Let me know if you need further tweaks, additional files, or assistance with other tasks! I’m here to ensure you fully underst
