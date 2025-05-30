@@ -1,0 +1,4 @@
+Joshua,50.0
+Favour,20.0
+King,30.0
+Aaron,10.0
