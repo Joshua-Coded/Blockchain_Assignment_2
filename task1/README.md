@@ -1,6 +1,6 @@
 # UTXO Transaction Simulator (C Implementation)
 
-![Blockchain Simulation](https://via.placeholder.com/800x400?text=UTXO+Transaction+Simulator)  
+![Screenshot](./Screen%20Shot%202025-05-31%20at%2012.59.20%20AM.png) 
 *Visual representation of UTXO transactions*
 
 A C program simulating Bitcoin's Unspent Transaction Output (UTXO) model with an interactive CLI interface, designed for educational purposes in blockchain technology.
