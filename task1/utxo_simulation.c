@@ -20,14 +20,15 @@
 // UTXO structure
 typedef struct {
     char txid[MAX_TXID_LEN]; // Transaction ID
-    char address[MAX_ADDRESS_LEN]; // Receiver's address
+    char address[MAX_ADDRESS_LEN]; // Receiver's address (e.g., ADDR1)
     float amount; // Transaction amount
     bool spent; // Flag to mark if UTXO is spent
 } UTXO;
 
 // User structure
 typedef struct {
-    char name[MAX_ADDRESS_LEN];
+    char name[MAX_ADDRESS_LEN]; // User's name (e.g., Joshua)
+    char address[MAX_ADDRESS_LEN]; // Generated address (e.g., ADDR1)
 } User;
 
 // Global arrays and counts
@@ -36,7 +37,12 @@ int utxo_count = 0;
 User user_list[MAX_USERS];
 int user_count = 0;
 
-// Function to read users from file
+// Function to generate a unique address for a user
+void generate_address(char *address, int index) {
+    snprintf(address, MAX_ADDRESS_LEN, "ADDR%d", index + 1); // e.g., ADDR1, ADDR2
+}
+
+// Function to read users from file and assign addresses
 bool read_users_from_file(const char *filename) {
     FILE *file = fopen(filename, "r");
     if (!file) {
@@ -50,6 +56,7 @@ bool read_users_from_file(const char *filename) {
         line[strcspn(line, "\n")] = 0;
         if (strlen(line) > 0 && strlen(line) < MAX_ADDRESS_LEN) {
             strcpy(user_list[user_count].name, line);
+            generate_address(user_list[user_count].address, user_count); // Assign address
             user_count++;
         }
     }
@@ -61,21 +68,33 @@ bool read_users_from_file(const char *filename) {
     return true;
 }
 
-// Function to check if a user exists
-bool is_valid_user(const char *name) {
+// Function to check if an address is valid
+bool is_valid_address(const char *address) {
     for (int i = 0; i < user_count; i++) {
-        if (strcmp(user_list[i].name, name) == 0) {
+        if (strcmp(user_list[i].address, address) == 0) {
             return true;
         }
     }
     return false;
 }
 
-// Function to display all users
-void display_users() {
-    printf(COLOR_CYAN "\n=== Available Users ===\n" COLOR_RESET);
+// Function to get user name by address
+const char* get_user_name_by_address(const char *address) {
     for (int i = 0; i < user_count; i++) {
-        printf("%d. %s\n", i + 1, user_list[i].name);
+        if (strcmp(user_list[i].address, address) == 0) {
+            return user_list[i].name;
+        }
+    }
+    return "Unknown";
+}
+
+// Function to display all users with their addresses
+void display_users() {
+    printf(COLOR_CYAN "\n=== Available Users and Addresses ===\n" COLOR_RESET);
+    printf("Name            | Address\n");
+    printf("-------------------------\n");
+    for (int i = 0; i < user_count; i++) {
+        printf("%-15s | %s\n", user_list[i].name, user_list[i].address);
     }
     printf("\n");
 }
@@ -83,41 +102,66 @@ void display_users() {
 // Function to initialize sample UTXOs
 void initialize_utxos() {
     if (user_count < 2) return; // Need at least 2 users
-    // Initialize UTXOs for first two users
+    // Initialize UTXOs for first two users using their addresses
     snprintf(utxo_list[utxo_count].txid, MAX_TXID_LEN, "TX1");
-    strcpy(utxo_list[utxo_count].address, user_list[0].name);
+    strcpy(utxo_list[utxo_count].address, user_list[0].address); // e.g., ADDR1
     utxo_list[utxo_count].amount = 50.0;
     utxo_list[utxo_count].spent = false;
     utxo_count++;
 
     snprintf(utxo_list[utxo_count].txid, MAX_TXID_LEN, "TX2");
-    strcpy(utxo_list[utxo_count].address, user_list[0].name);
+    strcpy(utxo_list[utxo_count].address, user_list[0].address); // e.g., ADDR1
     utxo_list[utxo_count].amount = 30.0;
     utxo_list[utxo_count].spent = false;
     utxo_count++;
 
     snprintf(utxo_list[utxo_count].txid, MAX_TXID_LEN, "TX3");
-    strcpy(utxo_list[utxo_count].address, user_list[1].name);
+    strcpy(utxo_list[utxo_count].address, user_list[1].address); // e.g., ADDR2
     utxo_list[utxo_count].amount = 20.0;
     utxo_list[utxo_count].spent = false;
     utxo_count++;
 }
 
-// Function to display all unspent UTXOs
+// Function to display unspent UTXOs
 void display_utxos() {
-    printf(COLOR_CYAN "\n=== Available UTXOs ===\n" COLOR_RESET);
-    printf("Index | TXID | Address | Amount | Spent\n");
-    printf("-------------------------------------\n");
+    printf(COLOR_CYAN "\n=== Unspent UTXOs ===\n" COLOR_RESET);
+    printf("Index | TXID | User (Address)       | Amount | Spent\n");
+    printf("-----------------------------------------------\n");
     bool has_utxos = false;
     for (int i = 0; i < utxo_count; i++) {
         if (!utxo_list[i].spent) {
-            printf("%-5d | %-4s | %-7s | %.2f | %s\n", i, utxo_list[i].txid, utxo_list[i].address, 
+            printf("%-5d | %-4s | %s (%s) | %.2f | %s\n", i, utxo_list[i].txid,
+                   get_user_name_by_address(utxo_list[i].address), utxo_list[i].address,
                    utxo_list[i].amount, utxo_list[i].spent ? "Yes" : "No");
             has_utxos = true;
         }
     }
     if (!has_utxos) {
         printf(COLOR_RED "No unspent UTXOs available.\n" COLOR_RESET);
+    }
+    printf("\n");
+}
+
+// Function to display all UTXOs (spent and unspent)
+void display_all_utxos() {
+    printf(COLOR_CYAN "\n=== All UTXOs (Spent and Unspent) ===\n" COLOR_RESET);
+    printf("Index | TXID | User (Address)       | Amount | Spent\n");
+    printf("-----------------------------------------------\n");
+    bool has_utxos = false;
+    for (int i = 0; i < utxo_count; i++) {
+        if (utxo_list[i].spent) {
+            printf(COLOR_RED "%-5d | %-4s | %s (%s) | %.2f | %s\n" COLOR_RESET,
+                   i, utxo_list[i].txid, get_user_name_by_address(utxo_list[i].address),
+                   utxo_list[i].address, utxo_list[i].amount, "Yes");
+        } else {
+            printf("%-5d | %-4s | %s (%s) | %.2f | %s\n",
+                   i, utxo_list[i].txid, get_user_name_by_address(utxo_list[i].address),
+                   utxo_list[i].address, utxo_list[i].amount, "No");
+        }
+        has_utxos = true;
+    }
+    if (!has_utxos) {
+        printf(COLOR_RED "No UTXOs available.\n" COLOR_RESET);
     }
     printf("\n");
 }
@@ -130,23 +174,23 @@ void generate_txid(char *txid) {
 
 // Function to perform a transaction
 bool perform_transaction() {
-    char sender[MAX_ADDRESS_LEN], receiver[MAX_ADDRESS_LEN];
+    char sender_addr[MAX_ADDRESS_LEN], receiver_addr[MAX_ADDRESS_LEN];
     float amount;
     int selected_utxos[MAX_UTXOS], selected_count = 0;
     float total_available = 0.0;
 
     // Display users for selection
     display_users();
-    printf(COLOR_YELLOW "Enter sender's name: " COLOR_RESET);
-    scanf("%s", sender);
-    if (!is_valid_user(sender)) {
-        printf(COLOR_RED "Error: Sender '%s' not found.\n" COLOR_RESET, sender);
+    printf(COLOR_YELLOW "Enter sender's address (e.g., ADDR1): " COLOR_RESET);
+    scanf("%s", sender_addr);
+    if (!is_valid_address(sender_addr)) {
+        printf(COLOR_RED "Error: Sender address '%s' not found.\n" COLOR_RESET, sender_addr);
         return false;
     }
-    printf(COLOR_YELLOW "Enter receiver's name: " COLOR_RESET);
-    scanf("%s", receiver);
-    if (!is_valid_user(receiver)) {
-        printf(COLOR_RED "Error: Receiver '%s' not found.\n" COLOR_RESET, receiver);
+    printf(COLOR_YELLOW "Enter receiver's address (e.g., ADDR2): " COLOR_RESET);
+    scanf("%s", receiver_addr);
+    if (!is_valid_address(receiver_addr)) {
+        printf(COLOR_RED "Error: Receiver address '%s' not found.\n" COLOR_RESET, receiver_addr);
         return false;
     }
     printf(COLOR_YELLOW "Enter amount to transfer: " COLOR_RESET);
@@ -157,25 +201,26 @@ bool perform_transaction() {
         printf(COLOR_RED "Error: Amount must be positive.\n" COLOR_RESET);
         return false;
     }
-    if (strcmp(sender, receiver) == 0) {
-        printf(COLOR_RED "Error: Sender and receiver cannot be the same.\n" COLOR_RESET);
+    if (strcmp(sender_addr, receiver_addr) == 0) {
+        printf(COLOR_RED "Error: Sender and receiver addresses cannot be the same.\n" COLOR_RESET);
         return false;
     }
 
     // Display sender's available UTXOs
-    printf(COLOR_CYAN "\n%s's Available UTXOs:\n" COLOR_RESET, sender);
+    printf(COLOR_CYAN "\nAvailable UTXOs for %s (%s):\n" COLOR_RESET,
+           get_user_name_by_address(sender_addr), sender_addr);
     printf("Index | TXID | Amount\n");
     printf("---------------------\n");
     bool has_utxos = false;
     for (int i = 0; i < utxo_count; i++) {
-        if (!utxo_list[i].spent && strcmp(utxo_list[i].address, sender) == 0) {
+        if (!utxo_list[i].spent && strcmp(utxo_list[i].address, sender_addr) == 0) {
             printf("%-5d | %-4s | %.2f\n", i, utxo_list[i].txid, utxo_list[i].amount);
             total_available += utxo_list[i].amount;
             has_utxos = true;
         }
     }
     if (!has_utxos) {
-        printf(COLOR_RED "Error: No unspent UTXOs for %s.\n" COLOR_RESET, sender);
+        printf(COLOR_RED "Error: No unspent UTXOs for address %s.\n" COLOR_RESET, sender_addr);
         return false;
     }
     if (total_available < amount) {
@@ -191,8 +236,8 @@ bool perform_transaction() {
         printf(COLOR_YELLOW "Enter UTXO index: " COLOR_RESET);
         scanf("%d", &index);
         if (index == -1) break;
-        if (index < 0 || index >= utxo_count || utxo_list[index].spent || 
-            strcmp(utxo_list[index].address, sender) != 0) {
+        if (index < 0 || index >= utxo_count || utxo_list[index].spent ||
+            strcmp(utxo_list[index].address, sender_addr) != 0) {
             printf(COLOR_RED "Error: Invalid or already spent UTXO index.\n" COLOR_RESET);
             continue;
         }
@@ -210,7 +255,7 @@ bool perform_transaction() {
     }
 
     // Create new UTXO for receiver
-    strcpy(utxo_list[utxo_count].address, receiver);
+    strcpy(utxo_list[utxo_count].address, receiver_addr);
     utxo_list[utxo_count].amount = amount;
     utxo_list[utxo_count].spent = false;
     generate_txid(utxo_list[utxo_count].txid);
@@ -219,7 +264,7 @@ bool perform_transaction() {
     // Create change UTXO for sender if applicable
     float change = selected_amount - amount;
     if (change > 0) {
-        strcpy(utxo_list[utxo_count].address, sender);
+        strcpy(utxo_list[utxo_count].address, sender_addr);
         utxo_list[utxo_count].amount = change;
         utxo_list[utxo_count].spent = false;
         generate_txid(utxo_list[utxo_count].txid);
@@ -227,9 +272,12 @@ bool perform_transaction() {
     }
 
     printf(COLOR_GREEN "\n🎉 Transaction successful! 🎉\n" COLOR_RESET);
-    printf("Transferred %.2f from %s to %s\n", amount, sender, receiver);
+    printf("Transferred %.2f from %s (%s) to %s (%s)\n", amount,
+           get_user_name_by_address(sender_addr), sender_addr,
+           get_user_name_by_address(receiver_addr), receiver_addr);
     if (change > 0) {
-        printf("Change of %.2f returned to %s\n", change, sender);
+        printf("Change of %.2f returned to %s (%s)\n", change,
+               get_user_name_by_address(sender_addr), sender_addr);
     }
     return true;
 }
@@ -255,11 +303,12 @@ int main() {
     int choice;
     while (true) {
         printf(COLOR_CYAN "\n=== Menu ===\n" COLOR_RESET);
-        printf("1. View all unspent UTXOs\n");
-        printf("2. View all users\n");
-        printf("3. Perform a transaction\n");
-        printf("4. Exit\n");
-        printf(COLOR_YELLOW "Enter choice (1-4): " COLOR_RESET);
+        printf("1. View unspent UTXOs\n");
+        printf("2. View all UTXOs (spent and unspent)\n");
+        printf("3. View all users and addresses\n");
+        printf("4. Perform a transaction\n");
+        printf("5. Exit\n");
+        printf(COLOR_YELLOW "Enter choice (1-5): " COLOR_RESET);
         scanf("%d", &choice);
 
         switch (choice) {
@@ -267,13 +316,16 @@ int main() {
                 display_utxos();
                 break;
             case 2:
-                display_users();
+                display_all_utxos();
                 break;
             case 3:
+                display_users();
+                break;
+            case 4:
                 perform_transaction();
                 display_utxos();
                 break;
-            case 4:
+            case 5:
                 printf(COLOR_GREEN "Thank you for using the simulator! Goodbye.\n" COLOR_RESET);
                 return 0;
             default:

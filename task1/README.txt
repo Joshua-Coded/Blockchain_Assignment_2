@@ -1,68 +1,91 @@
+Below is the README content for the UTXO-Based Transaction Simulator converted into Markdown format. The content is based on the provided text, which describes the updated utxo_simulation.c program that uses automatically generated addresses (e.g., ADDR1) instead of user names for transactions, as per your latest request. The Markdown version maintains all sections, formatting, and details, ensuring it’s clear, well-structured, and suitable for inclusion in your GitHub repository or assignment submission. I’ve also ensured it aligns with your specified users (Joshua, Favour, King, Aaron) and your macOS environment (noted from alana@Alana-MacBook-Pro).
+This Markdown file assumes you’re using the updated utxo_simulation.c from the previous response, which includes address generation, the ability to view spent/unspent UTXOs, and an interactive CLI with colors and emojis (🎉). If you need the C code or users.txt content again, let me know, and I can include them.
 UTXO-Based Transaction Simulator
-===============================
-
 Overview
---------
-This C program simulates a simplified UTXO (Unspent Transaction Output) model, mimicking Bitcoin's transaction system. It reads user names from `users.txt` and provides an interactive CLI with colorful prompts and feedback. Users can view UTXOs, list available users, perform transactions, and exit, with robust input validation and dynamic UTXO management.
-
+This C program simulates a simplified Unspent Transaction Output (UTXO) model, mimicking Bitcoin's transaction system. It reads user names from users.txt, automatically generates unique addresses for each user (e.g., ADDR1), and provides an interactive command-line interface (CLI) with colorful prompts and feedback. Users can:
+View unspent UTXOs.
+View all UTXOs (spent and unspent).
+View user-address mappings.
+Perform transactions using addresses.
+Exit the program.
+The program includes robust input validation and dynamic UTXO management, meeting the requirements of Task 1 while enhancing realism with address-based transactions.
 How the Code Works
------------------
-- **Data Structures**:
-  - `UTXO` struct: Stores transaction ID (`txid`), address, amount, and `spent` flag.
-  - `User` struct: Stores user names loaded from `users.txt`.
-  - Global arrays: `utxo_list` (max 100 UTXOs) and `user_list` (max 50 users).
-- **Key Functions**:
-  - `read_users_from_file()`: Loads user names from `users.txt` into `user_list`.
-  - `is_valid_user()`: Checks if a given name is in the user list.
-  - `display_users()`: Shows all available users.
-  - `initialize_utxos()`: Sets up initial UTXOs for the first two users (e.g., 50.0, 30.0 for user1; 20.0 for user2).
-  - `display_utxos()`: Prints unspent UTXOs in a table format.
-  - `generate_txid()`: Generates unique transaction IDs (e.g., TX4, TX5).
-  - `perform_transaction()`: Handles transaction logic:
-    - Lists users and prompts for sender, receiver, and amount.
-    - Validates sender/receiver against `users.txt` and checks sufficient funds.
-    - Allows selection of UTXOs by index, marks them as spent, creates new UTXOs for receiver and change.
-    - Provides colorful feedback on success or errors.
-  - `main()`: Interactive menu with options to view UTXOs, users, transact, or exit.
-- **Interactivity**:
-  - ANSI color codes enhance readability (green for success, red for errors, yellow for prompts, cyan for tables).
-  - Displays users before transactions to guide input.
-  - Emoji feedback (e.g., 🎉) and clear prompts improve user experience.
-  - Robust error handling for invalid users, amounts, or UTXO indices.
-
+Data Structures
+UTXO Struct:
+Stores transaction ID (txid), address (e.g., ADDR1), amount, and spent flag.
+User Struct:
+Stores user name (e.g., Joshua) and generated address (e.g., ADDR1).
+Global Arrays:
+utxo_list: Maximum 100 UTXOs.
+user_list: Maximum 50 users.
+Key Functions
+read_users_from_file():
+Loads user names from users.txt and assigns unique addresses.
+generate_address():
+Creates addresses like ADDR1, ADDR2 for each user.
+is_valid_address():
+Checks if an address belongs to a user.
+get_user_name_by_address():
+Retrieves user name for an address for display purposes.
+display_users():
+Shows user names and their addresses in a table.
+initialize_utxos():
+Sets up initial UTXOs for the first two users' addresses (e.g., 50.0, 30.0 for ADDR1; 20.0 for ADDR2).
+display_utxos():
+Prints unspent UTXOs with user names and addresses.
+display_all_utxos():
+Prints all UTXOs, with spent UTXOs highlighted in red.
+generate_txid():
+Generates unique transaction IDs (e.g., TX4, TX5).
+perform_transaction():
+Prompts for sender/receiver addresses and amount.
+Validates addresses and checks sufficient funds.
+Allows selection of UTXOs by index, marks them as spent, and creates new UTXOs for the receiver and change.
+Provides colorful feedback with user names and addresses.
+main():
+Interactive menu with options to view UTXOs, users, transact, or exit.
+Interactivity
+ANSI Color Codes: Green for success, red for errors/spent UTXOs, yellow for prompts, cyan for tables.
+User-Address Mappings: Displayed before transactions to guide input.
+Emoji Feedback: Uses 🎉 for successful transactions.
+Error Handling: Validates addresses, amounts, and UTXO indices.
 Running Guide
--------------
-1. **Install a C Compiler**:
-   - Linux: Install GCC with `sudo apt update && sudo apt install build-essential`.
-   - macOS: Install Xcode Command Line Tools with `xcode-select --install`.
-   - Windows: Install MinGW or use WSL with Ubuntu and GCC.
-2. **Prepare `users.txt`**:
-   - Create a file named `users.txt` in the same directory as `utxo_simulation.c`.
-   - Add user names (one per line, e.g.):
-     ```
-     Joshua
-     Favour
-     King
-     Aaron
-     ```
-   - Ensure names are unique, < 20 characters, and have no spaces or trailing newlines.
-3. **Compile the Program**:
-   - Open a terminal in the directory containing `utxo_simulation.c` and `users.txt`.
-   - Run: `gcc utxo_simulation.c -o utxo_simulation`
-   - This creates an executable (`utxo_simulation` or `utxo_simulation.exe` on Windows).
-4. **Run the Program**:
-   - Execute: `./utxo_simulation` (or `utxo_simulation.exe` on Windows).
-   - If `users.txt` is missing or empty, the program will exit with an error.
-5. **Interact with the CLI**:
-   - Choose from the menu (1-4) to view UTXOs, users, perform transactions, or exit.
-   - For transactions, select sender/receiver from the listed users, enter an amount, and choose UTXOs by index.
-6. **Troubleshooting**:
-   - **"Cannot open users.txt"**: Ensure `users.txt` exists in the same directory.
-   - **No colors**: Use a terminal supporting ANSI codes (e.g., Linux/macOS terminal, Windows PowerShell).
-   - **Invalid input errors**: Ensure user names match `users.txt` exactly and UTXO indices are valid.
-
+Install a C Compiler:
+macOS: Install Xcode Command Line Tools with:
+bash
+xcode-select --install
+Linux: Install build essentials:
+bash
+sudo apt update && sudo apt install build-essential
+Windows: Install MinGW or use WSL with Ubuntu and GCC.
+Prepare users.txt:
+Create a file named users.txt in the same directory as utxo_simulation.c.
+Add at least 2 user names (one per line), e.g.:
+Joshua
+Favour
+King
+Aaron
+Ensure names are unique, < 20 characters, and have no spaces or trailing newlines.
+Compile the Program:
+Open a terminal in the directory with utxo_simulation.c and users.txt.
+Run:
+bash
+gcc utxo_simulation.c -o utxo_simulation
+This creates an executable (utxo_simulation).
+Run the Program:
+Execute:
+bash
+./utxo_simulation
+If users.txt is missing or empty, the program exits with an error.
+Interact with the CLI:
+Choose from the menu (1-5) to view unspent UTXOs, all UTXOs, users/addresses, perform transactions, or exit.
+For transactions, enter sender/receiver addresses (e.g., ADDR1, ADDR2) and amount.
+Troubleshooting:
+"Cannot open users.txt": Ensure users.txt exists in the same directory.
+No colors: Use a terminal supporting ANSI codes (e.g., macOS Terminal, Linux terminal, Windows PowerShell).
+Invalid address errors: Ensure addresses match those shown in the user list (e.g., ADDR1).
 Sample Input/Output
-------------------
+bash
 $ gcc utxo_simulation.c -o utxo_simulation
 $ ./utxo_simulation
 
@@ -71,42 +94,47 @@ $ ./utxo_simulation
 =====================================
 
 === Menu ===
-1. View all unspent UTXOs
-2. View all users
-3. Perform a transaction
-4. Exit
-Enter choice (1-4): 2
+1. View unspent UTXOs
+2. View all UTXOs (spent and unspent)
+3. View all users and addresses
+4. Perform a transaction
+5. Exit
+Enter choice (1-5): 3
 
-=== Available Users ===
-1. Joshua
-2. Favour
-3. King
-4. Aaron
-
-=== Menu ===
-Enter choice (1-4): 1
-
-=== Available UTXOs ===
-Index | TXID | Address | Amount | Spent
--------------------------------------
-0     | TX1  | Joshua  | 50.00 | No
-1     | TX2  | Joshua  | 30.00 | No
-2     | TX3  | Favour  | 20.00 | No
+=== Available Users and Addresses ===
+Name            | Address
+------------------------- 
+Joshua          | ADDR1
+Favour          | ADDR2
+King            | ADDR3
+Aaron           | ADDR4
 
 === Menu ===
-Enter choice (1-4): 3
+Enter choice (1-5): 1
 
-=== Available Users ===
-1. Joshua
-2. Favour
-3. King
-4. Aaron
+=== Unspent UTXOs ===
+Index | TXID | User (Address)       | Amount | Spent
+----------------------------------------------- 
+0     | TX1  | Joshua (ADDR1)       | 50.00 | No
+1     | TX2  | Joshua (ADDR1)       | 30.00 | No
+2     | TX3  | Favour (ADDR2)       | 20.00 | No
 
-Enter sender's name: Joshua
-Enter receiver's name: Favour
+=== Menu ===
+Enter choice (1-5): 4
+
+=== Available Users and Addresses ===
+Name            | Address
+------------------------- 
+Joshua          | ADDR1
+Favour          | ADDR2
+King            | ADDR3
+Aaron           | ADDR4
+
+Enter sender's address (e.g., ADDR1): ADDR1
+Enter receiver's address (e.g., ADDR2): ADDR2
 Enter amount to transfer: 60.00
 
-Joshua's Available UTXOs:
+Available UTXOs for Joshua (ADDR1):
 Index | TXID | Amount
 ---------------------
 0     | TX1  | 50.00
@@ -118,31 +146,67 @@ Enter UTXO index: 1
 Enter UTXO index: -1
 
 🎉 Transaction successful! 🎉
-Transferred 60.00 from Joshua to Favour
-Change of 20.00 returned to Joshua
+Transferred 60.00 from Joshua (ADDR1) to Favour (ADDR2)
+Change of 20.00 returned to Joshua (ADDR1)
 
-=== Available UTXOs ===
-Index | TXID | Address | Amount | Spent
--------------------------------------
-2     | TX3  | Favour  | 20.00 | No
-3     | TX4  | Favour  | 60.00 | No
-4     | TX5  | Joshua  | 20.00 | No
+=== Unspent UTXOs ===
+Index | TXID | User (Address)       | Amount | Spent
+----------------------------------------------- 
+2     | TX3  | Favour (ADDR2)       | 20.00 | No
+3     | TX4  | Favour (ADDR2)       | 60.00 | No
+4     | TX5  | Joshua (ADDR1)       | 20.00 | No
 
 === Menu ===
-Enter choice (1-4): 4
+Enter choice (1-5): 2
+
+=== All UTXOs (Spent and Unspent) ===
+Index | TXID | User (Address)       | Amount | Spent
+----------------------------------------------- 
+0     | TX1  | Joshua (ADDR1)       | 50.00 | Yes
+1     | TX2  | Joshua (ADDR1)       | 30.00 | Yes
+2     | TX3  | Favour (ADDR2)       | 20.00 | No
+3     | TX4  | Favour (ADDR2)       | 60.00 | No
+4     | TX5  | Joshua (ADDR1)       | 20.00 | No
+
+=== Menu ===
+Enter choice (1-5): 5
 Thank you for using the simulator! Goodbye.
-
 Setup Instructions
-------------------
-1. Ensure `users.txt` exists in the same directory with at least 2 user names (one per line, as shown above).
-2. Compile: `gcc utxo_simulation.c -o utxo_simulation`
-3. Run: `./utxo_simulation`
-4. Follow the menu prompts to interact.
-
+Ensure users.txt exists with at least 2 user names (one per line, as shown above).
+Compile:
+bash
+gcc utxo_simulation.c -o utxo_simulation
+Run:
+bash
+./utxo_simulation
+Follow the menu prompts to interact.
 Notes
------
-- User names in `users.txt` must be unique, < 20 characters, and without spaces.
-- The program requires `users.txt` to exist and contain valid names.
-- ANSI color codes may not work in some terminals (e.g., Windows CMD without ANSI support).
-- Maximum limits: 100 UTXOs, 50 users.
-- Transaction IDs are sequential (TX1, TX2, etc.).
+User names in users.txt must be unique, < 20 characters, and without spaces.
+Addresses (e.g., ADDR1) are automatically generated for each user.
+The program requires users.txt to exist with valid names.
+Spent UTXOs are highlighted in red for clarity.
+ANSI color codes may not work in some terminals (e.g., Windows CMD without ANSI support).
+Maximum limits: 100 UTXOs, 50 users.
+Transaction IDs are sequential (TX1, TX2, etc.).
+How to Use This Markdown File
+Save as README.md:
+Copy the above content into a file named README.md in your project directory (same directory as utxo_simulation.c and users.txt).
+Markdown (.md) is the standard format for GitHub READMEs, ensuring proper rendering.
+GitHub Repository:
+Create a repository (e.g., UTXO_Simulator).
+Push utxo_simulation.c, users.txt, and README.md.
+The Markdown will display formatted text, headings, code blocks, and tables on GitHub.
+Submission:
+Include utxo_simulation.c, users.txt, and README.md in a folder.
+Compress into a .zip file named YourFullName_UTXO_Blockchain.zip (e.g., Alana_UTXO_Blockchain.zip).
+Upload to the assignment platform by June 5, 2025, 11:59 PM (noted from prior messages).
+Provide the GitHub repository URL in your submission.
+Notes
+Alignment with Your Request: The Markdown preserves all details from the provided text, formatted for readability and compatibility with GitHub. It reflects the use of addresses (e.g., ADDR1) and includes your specified users (Joshua, Favour, King, Aaron).
+UTXO Model: The README explains the program’s implementation of the UTXO model, reinforcing your learning goal of understanding blockchain models (as discussed in prior messages).
+Running on macOS: The setup instructions are tailored for your MacBook Pro (from alana@Alana-MacBook-Pro). If you need help compiling/running, let me know.
+Additional Help:
+If you need the updated utxo_simulation.c code again, I can provide it.
+For Task 2 (Account/Balance) or Question 2 (Blockchain Mining), I can create similar Markdown READMEs or code updates (e.g., using addresses in account_model_simulation.c).
+If you want more explanation of the UTXO model or other blockchain models (e.g., Account/Balance, EUTXO), I can expand on the comparison from earlier.
+Let me know if you need further tweaks, additional files, or assistance with other tasks! I’m here to ensure you fully underst
