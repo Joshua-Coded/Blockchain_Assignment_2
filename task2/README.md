@@ -1,6 +1,3 @@
-Here's your enhanced **README.md** with improved formatting, visual elements, and complete documentation:
-
-```markdown
 # 🏦 Account/Balance Transaction Simulator  
 
 [![Blockchain Model](https://img.shields.io/badge/Model-Account%2FBalance-1e90ff?style=for-the-badge&logo=ethereum)](https://ethereum.org/en/developers/docs/accounts/)
