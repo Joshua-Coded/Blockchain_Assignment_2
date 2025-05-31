@@ -138,8 +138,8 @@ int main() {
     int choice;
     while (true) {
         printf(COLOR_CYAN "\n=== Menu ===\n" COLOR_RESET);
-        printf("1. View all account balances\n");
-        printf("2. Perform a transaction\n");
+        printf("1. View account balances\n");
+        printf("2. Transfer funds\n");
         printf("3. Exit\n");
         printf(COLOR_YELLOW "Enter choice (1-3): " COLOR_RESET);
         scanf("%d", &choice);
