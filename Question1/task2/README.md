@@ -112,11 +112,4 @@ sudo apt install build-essential
 | Compilation error | Check GCC version | `gcc --version` |
 | No colors | Use ANSI terminal | Try `export TERM=xterm-256color` |
 
-## 📜 License & Submission
 
-Educational Use - Created for Blockchain Course  
-**Due**: June 1, 2025  
-**Submit**: `YourName_Account_Model.zip` containing:
-- `account_simulator.c`
-- `users.txt`
-- 
